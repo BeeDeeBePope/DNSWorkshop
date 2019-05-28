@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class ObjectSpawner : MonoBehaviour
 {
+    public AbstractFactory Factory;
+
+    private static ObjectSpawner instance;
+
     private void Awake()
     {
         aa = new GameObject("AA");
@@ -12,14 +16,23 @@ public class ObjectSpawner : MonoBehaviour
         bb = new GameObject("BB");
         bb.transform.parent = transform;
         bb.transform.localPosition = new Vector3(5, 0, 5);
+
+        instance = this;
+
+        ObjectPrefabs = Factory.GetProducts().ToArray();
     }
 
-    public GameObject[] ObjectPrefabs;
+    public static ObjectSpawner GetInstance()
+    {
+        return instance;
+    }
+
+    public Product[] ObjectPrefabs;
 
     public void SpawnRandom()
     {
         int index = Random.Range(0, ObjectPrefabs.Length);
-        GameObject goToSpawn = ObjectPrefabs[index];
+        Product goToSpawn = ObjectPrefabs[index];
 
         Vector3 aaPos = aa.transform.position;
         Vector3 bbPos = bb.transform.position;
